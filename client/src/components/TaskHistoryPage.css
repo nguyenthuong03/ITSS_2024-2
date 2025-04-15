@@ -1,0 +1,77 @@
+.task-history-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.task-history-container h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-item {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.stat-item h3 {
+  margin: 0 0 10px;
+  color: #666;
+  font-size: 16px;
+}
+
+.stat-item p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-info h3 {
+  margin: 0 0 10px;
+  color: #2c3e50;
+}
+
+.task-info p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.task-xp {
+  background-color: #e8f5e9;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.task-xp span {
+  color: #2e7d32;
+  font-weight: bold;
+} 
