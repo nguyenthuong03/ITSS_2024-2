@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function TaskList({ tasks, onStartTask }) {
   return (
@@ -8,15 +8,22 @@ function TaskList({ tasks, onStartTask }) {
         <p>Chưa có nhiệm vụ nào</p>
       ) : (
         <ul>
-          {tasks.map((task) => (
-            <li key={task.id} className={task.completed ? 'completed' : ''}>
-              <div className="task-info">
-                <h3>{task.task}</h3>
-                <p>Thời gian: {task.time}</p>
-              </div>
-              {!task.completed && (
-                <button onClick={() => onStartTask(task.id)}>Bắt đầu</button>
-              )}
+          {tasks.map((group, indexx) => (
+            <li key={indexx}>
+              <h3>{group.title}</h3>
+              <ul>
+                {group.subtasks.map((task) => (
+                  <li key={task.id} className={task.completed ? 'completed' : ''}>
+                    <div className="task-info">
+                      <h4>{task.task}</h4>
+                      <p>Thời gian: {task.time}</p>
+                    </div>
+                    {!task.completed && (
+                      <button onClick={() => onStartTask(task.id)}>Bắt đầu</button>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>
@@ -24,5 +31,6 @@ function TaskList({ tasks, onStartTask }) {
     </div>
   );
 }
+
 
 export default TaskList; 
