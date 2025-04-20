@@ -20,6 +20,8 @@ function App() {
   const [showTimer, setShowTimer] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
+  const [currentInputTask, setCurrentInputTask] = useState('');
+
 
   useEffect(() => {
     fetchTasks();
@@ -30,6 +32,8 @@ function App() {
       const response = await fetch(`${API_URL}/api/tasks`);
       const data = await response.json();
       setTasks(data);
+      console.log("Fetched tasks:", data);
+
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
@@ -44,12 +48,19 @@ function App() {
         },
         body: JSON.stringify({ task, time }),
       });
-      const newTask = await response.json();
-      setTasks([...tasks, newTask]);
+  
+      const newSubtasks = await response.json(); // array of subtasks
+      const newGroup = {
+        title: task,
+        subtasks: newSubtasks
+      };
+  
+      setTasks([...tasks, newGroup]); // Bây giờ tasks là 1 mảng các nhóm
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
+  
 
   const handleStartTask = async (taskId) => {
     try {
@@ -99,8 +110,9 @@ function App() {
                 </header>
                 {!showTimer ? (
                   <>
-                    <TaskInput onAddTask={handleAddTask} />
-                    <TaskList tasks={tasks} onStartTask={handleStartTask} />
+                    <TaskInput onAddTask={handleAddTask} onTaskChange={(value) => setCurrentInputTask(value)}/>
+                    <h4>{currentInputTask}</h4>
+                    <TaskList tasks={tasks} onStartTask={handleStartTask} onTaskChange={(value) => setCurrentInputTask(value)}/>
                   </>
                 ) : (
                   <TaskTimer

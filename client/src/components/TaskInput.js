@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './TaskInput.css';
 
-function TaskInput({ onAddTask }) {
+function TaskInput({ onAddTasks, onTaskChange }) {
   const [task, setTask] = useState('');
   const [time, setTime] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -15,28 +15,18 @@ function TaskInput({ onAddTask }) {
     setError('');
 
     try {
-      // Gọi API để chia nhỏ nhiệm vụ
       const response = await fetch('http://localhost:5000/api/breakdown-task', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, time }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to break down task');
-      }
+      if (!response.ok) throw new Error('Failed to break down task');
 
       const data = await response.json();
-      
-      // Tạo một mảng promises để thêm tất cả subtask
-      const addTaskPromises = data.subtasks.map(subtask => 
-        onAddTask(subtask.task, subtask.estimatedTime)
-      );
 
-      // Đợi tất cả subtask được thêm xong
-      await Promise.all(addTaskPromises);
+      // Gửi toàn bộ subtasks lên App.js
+      onAddTasks(data.subtasks);
 
       setTask('');
       setTime('');
@@ -54,7 +44,10 @@ function TaskInput({ onAddTask }) {
         <input
           type="text"
           value={task}
-          onChange={(e) => setTask(e.target.value)}
+          onChange={(e) => {
+            setTask(e.target.value);
+            if (onTaskChange) onTaskChange(e.target.value);
+          }}
           placeholder="Nhập nhiệm vụ..."
           disabled={isLoading}
         />
@@ -74,5 +67,6 @@ function TaskInput({ onAddTask }) {
     </form>
   );
 }
+
 
 export default TaskInput; 
