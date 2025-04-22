@@ -20,8 +20,6 @@ function App() {
   const [showTimer, setShowTimer] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
-  const [currentInputTask, setCurrentInputTask] = useState('');
-
 
   useEffect(() => {
     fetchTasks();
@@ -32,8 +30,6 @@ function App() {
       const response = await fetch(`${API_URL}/api/tasks`);
       const data = await response.json();
       setTasks(data);
-      console.log("Fetched tasks:", data);
-
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
@@ -41,26 +37,23 @@ function App() {
 
   const handleAddTask = async (task, time) => {
     try {
-      const response = await fetch(`${API_URL}/api/tasks`, {
+      console.log('Adding task:', { task, time });
+      const response = await fetch('http://localhost:5000/api/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ task, time }),
       });
-  
-      const newSubtasks = await response.json(); // array of subtasks
-      const newGroup = {
-        title: task,
-        subtasks: newSubtasks
-      };
-  
-      setTasks([...tasks, newGroup]); // Bây giờ tasks là 1 mảng các nhóm
+      const newTask = await response.json();
+      console.log('New task added:', newTask);
+      
+      setTasks(prevTasks => [...prevTasks, newTask]);
+      console.log('Updated tasks:', [...tasks, newTask]);
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
-  
 
   const handleStartTask = async (taskId) => {
     try {
@@ -110,9 +103,8 @@ function App() {
                 </header>
                 {!showTimer ? (
                   <>
-                    <TaskInput onAddTask={handleAddTask} onTaskChange={(value) => setCurrentInputTask(value)}/>
-                    <h4>{currentInputTask}</h4>
-                    <TaskList tasks={tasks} onStartTask={handleStartTask} onTaskChange={(value) => setCurrentInputTask(value)}/>
+                    <TaskInput onAddTask={handleAddTask} />
+                    <TaskList tasks={tasks} onStartTask={handleStartTask} />
                   </>
                 ) : (
                   <TaskTimer
